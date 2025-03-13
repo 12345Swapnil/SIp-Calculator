@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIP Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+        
+        .calculator {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+        
+        .inputs {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .results {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="number"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            margin-top: 8px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .result-card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .result-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .result-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #3498db;
+        }
+        
+        .chart-container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            flex-grow: 1;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chart {
+            width: 100%;
+            height: 250px;
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        .bar {
+            position: absolute;
+            bottom: 0;
+            width: 80px;
+            border-radius: 5px 5px 0 0;
+            transition: height 0.5s ease;
+        }
+        
+        .investment-bar {
+            background-color: #3498db;
+            left: 20%;
+        }
+        
+        .returns-bar {
+            background-color: #2ecc71;
+            right: 20%;
+        }
+        
+        .bar-label {
+            position: absolute;
+            bottom: -25px;
+            text-align: center;
+            width: 100%;
+            font-weight: 600;
+        }
+        
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            width: 100%;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+            gap: 30px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+        
+        .blue {
+            background-color: #3498db;
+        }
+        
+        .green {
+            background-color: #2ecc71;
+        }
+        
+        .note {
+            text-align: center;
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 20px;
+            }
+            
+            .calculator {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SIP Calculator</h1>
+        
+        <div class="calculator">
+            <div class="inputs">
+                <div class="input-group">
+                    <label for="monthlyInvestment">Monthly Investment (?)</label>
+                    <input type="number" id="monthlyInvestment" min="500" value="5000">
+                    <input type="range" id="monthlyInvestmentRange" min="500" max="100000" step="500" value="5000">
+                </div>
+                
+                <div class="input-group">
+                    <label for="returnRate">Expected Annual Return (%)</label>
+                    <input type="number" id="returnRate" min="1" max="30" step="0.1" value="12">
+                    <input type="range" id="returnRateRange" min="1" max="30" step="0.1" value="12">
+                </div>
+                
+                <div class="input-group">
+                    <label for="timePeriod">Time Period (Years)</label>
+                    <input type="number" id="timePeriod" min="1" max="30" value="10">
+                    <input type="range" id="timePeriodRange" min="1" max="30" value="10">
+                </div>
+                
+                <button id="calculateBtn">Calculate</button>
+            </div>
+            
+            <div class="results">
+                <div class="result-card">
+                    <div class="result-title">Invested Amount</div>
+                    <div class="result-value" id="investedAmount">? 6,00,000</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-title">Estimated Returns</div>
+                    <div class="result-value" id="estimatedReturns">? 4,91,993</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-title">Total Value</div>
+                    <div class="result-value" id="totalValue">? 10,91,993</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <h3>Investment Breakdown</h3>
+                <div class="chart">
+                    <div class="bar investment-bar" style="height: 55%;">
+                        <div class="bar-value" id="investedPercent">55%</div>
+                        <div class="bar-label">Invested</div>
+                    </div>
+                    <div class="bar returns-bar" style="height: 45%;">
+                        <div class="bar-value" id="returnsPercent">45%</div>
+                        <div class="bar-label">Returns</div>
+                    </div>
+                </div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color blue"></div>
+                        <span>Invested Amount</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color green"></div>
+                        <span>Expected Returns</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <p class="note">Note: The calculations are based on estimated returns and may vary from actual results.</p>
+    </div>
+    
+    <script>
+        // Get DOM elements
+        const monthlyInvestment = document.getElementById('monthlyInvestment');
+        const monthlyInvestmentRange = document.getElementById('monthlyInvestmentRange');
+        const returnRate = document.getElementById('returnRate');
+        const returnRateRange = document.getElementById('returnRateRange');
+        const timePeriod = document.getElementById('timePeriod');
+        const timePeriodRange = document.getElementById('timePeriodRange');
+        const calculateBtn = document.getElementById('calculateBtn');
+        
+        const investedAmount = document.getElementById('investedAmount');
+        const estimatedReturns = document.getElementById('estimatedReturns');
+        const totalValue = document.getElementById('totalValue');
+        const investedPercent = document.getElementById('investedPercent');
+        const returnsPercent = document.getElementById('returnsPercent');
+        const investmentBar = document.querySelector('.investment-bar');
+        const returnsBar = document.querySelector('.returns-bar');
+        
+        // Sync range inputs with number inputs
+        monthlyInvestmentRange.addEventListener('input', () => {
+            monthlyInvestment.value = monthlyInvestmentRange.value;
+        });
+        
+        monthlyInvestment.addEventListener('input', () => {
+            monthlyInvestmentRange.value = monthlyInvestment.value;
+        });
+        
+        returnRateRange.addEventListener('input', () => {
+            returnRate.value = returnRateRange.value;
+        });
+        
+        returnRate.addEventListener('input', () => {
+            returnRateRange.value = returnRate.value;
+        });
+        
+        timePeriodRange.addEventListener('input', () => {
+            timePeriod.value = timePeriodRange.value;
+        });
+        
+        timePeriod.addEventListener('input', () => {
+            timePeriodRange.value = timePeriod.value;
+        });
+        
+        // Calculate SIP returns
+        function calculateSIP() {
+            const principal = parseFloat(monthlyInvestment.value);
+            const rate = parseFloat(returnRate.value) / 100 / 12; // Monthly rate
+            const time = parseFloat(timePeriod.value) * 12; // Total months
+            
+            // Formula: P × ((1 + r)^n - 1) / r × (1 + r)
+            const totalInvestment = principal * time;
+            const futureValue = principal * ((Math.pow(1 + rate, time) - 1) / rate) * (1 + rate);
+            const returns = futureValue - totalInvestment;
+            
+            // Format currency
+            function formatCurrency(amount) {
+                return '? ' + amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            
+            // Update result values
+            investedAmount.textContent = formatCurrency(totalInvestment);
+            estimatedReturns.textContent = formatCurrency(returns);
+            totalValue.textContent = formatCurrency(futureValue);
+            
+            // Update chart
+            const investedRatio = totalInvestment / futureValue * 100;
+            const returnsRatio = returns / futureValue * 100;
+            
+            investedPercent.textContent = investedRatio.toFixed(0) + '%';
+            returnsPercent.textContent = returnsRatio.toFixed(0) + '%';
+            
+            investmentBar.style.height = investedRatio + '%';
+            returnsBar.style.height = returnsRatio + '%';
+        }
+        
+        // Calculate on button click
+        calculateBtn.addEventListener('click', calculateSIP);
+        
+        // Initial calculation
+        calculateSIP();
+    </script>
+</body>
+</html>
