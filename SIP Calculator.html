@@ -342,7 +342,7 @@
             const rate = parseFloat(returnRate.value) / 100 / 12; // Monthly rate
             const time = parseFloat(timePeriod.value) * 12; // Total months
             
-            // Formula: P × ((1 + r)^n - 1) / r × (1 + r)
+            // Formula: P Ã— ((1 + r)^n - 1) / r Ã— (1 + r)
             const totalInvestment = principal * time;
             const futureValue = principal * ((Math.pow(1 + rate, time) - 1) / rate) * (1 + rate);
             const returns = futureValue - totalInvestment;
